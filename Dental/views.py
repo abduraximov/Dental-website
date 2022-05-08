@@ -1,8 +1,33 @@
+import email
+import requests
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render
+from django.contrib import messages
 
 from Dental.models import About, Categories, Blog
+
+def send_msg(text1):
+    token = "1907297658:AAF6PFeOWh8Fd7oRCrjcfkOCEx6GETUFHZM"
+    chat_id = "678056623"
+
+    url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text1
+    
+    results = requests.get(url_req)
+
+def bookingnow(request):
+    if request.method == "POST":
+        name = "NAME: " + request.POST['your-name']
+        phone = "\nPHONE: " + request.POST['your-phone']
+        email =  "\nE-MAIL: " + request.POST['your-email']
+        address = "\nADDRESS: " + request.POST['your-address']
+        schedule = "\nSCHEDULE: " + request.POST['your-scheldule']
+        time = "\nTIME: " + request.POST['your-time']
+        message = "\nMESSAGE: " + request.POST['your-message']
+        texts = name + phone + email + address + schedule + time + message
+        send_msg(texts)
+        messages.success(request, 'Appointment sending successful')
+    return render(request, 'bookingnow.html', {})
 
 def home(request):
     return render(request, 'home.html', {})
